@@ -970,6 +970,15 @@ class LiveElasticsearchSpellingTestCase(TestCase):
         self.assertEqual(self.sqs.spelling_suggestion('structurd'), 'structured')
         self.assertEqual(self.sqs.auto_query('srchindex instanc').spelling_suggestion(), 'searchindex instance')
         self.assertEqual(self.sqs.spelling_suggestion('srchindex instanc'), 'searchindex instance')
+        self.assertEqual(self.sqs.spelling_suggestion('srchindex instance'), 'searchindex instance')
+
+    def test_spelling_when_filtering(self):
+        sqs = self.sqs.filter(author_exact='daniel2')
+        self.assertEqual(sqs.auto_query('structurd').spelling_suggestion(), 'structured')
+        self.assertEqual(sqs.spelling_suggestion('structurd'), 'structured')
+        self.assertEqual(sqs.auto_query('srchindex instanc').spelling_suggestion(), 'searchindex instance')
+        self.assertEqual(sqs.spelling_suggestion('srchindex instanc'), 'searchindex instance')
+        self.assertEqual(sqs.spelling_suggestion('searchindex instanc'), 'searchindex instance')
 
 
 class LiveElasticsearchMoreLikeThisTestCase(TestCase):
